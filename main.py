@@ -123,7 +123,7 @@ def iteravel_sem_nulo(iteravel, comparavel=None):
 
 def min_positivo(iteravel):
     for i, num in enumerate(iteravel):
-        if num < 0:
+        if num <= 0:
             iteravel[i] = math.inf
 
     try:
@@ -169,6 +169,15 @@ def calcula_resultado():
             z += resultado_custos[i][j]
     return z
 
+def aaaa():
+    aux=0
+    for i in range(0, len(resultado_custos)):
+        for j, num in enumerate(resultado_custos[aux]):
+            if num != 0:
+                a=origem[i]
+                b=destino[j-1]
+                print(str(a)+" --> "+str(b)+" = "+ str(num))
+        aux=aux+1
 
 def main():
 
@@ -186,18 +195,22 @@ def main():
         if valor_necessidade < valor_disponibilidade:
             resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * valor_necessidade
             for i in range(0, len(custos)):
-                custos[i][index_coluna_necessidade] = -1
+                custos[i][index_coluna_necessidade] = 0
             necessidade[index_coluna_necessidade] = None
             disponibilidade[index_linha_disponibilidade] -= valor_necessidade
         else:
             resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * \
                 valor_disponibilidade
             for i in range(0, len(custos[0])):
-                custos[index_linha_disponibilidade][i] = -1
+                custos[index_linha_disponibilidade][i] = 0
             disponibilidade[index_linha_disponibilidade] = None
             necessidade[index_coluna_necessidade] -= valor_disponibilidade
 
 
 main()
-print(resultado_custos)
+# print(resultado_custos)
+print('===================================')
+print('Transportes:') 
+aaaa()     
+print('===================================')
 print(calcula_resultado())
