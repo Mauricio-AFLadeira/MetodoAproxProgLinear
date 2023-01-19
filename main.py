@@ -1,4 +1,6 @@
-destination = ['Afeganistão',
+import math
+
+destino = ['Afeganistão',
                'Argélia',
                'Brasil',
                'Canadá',
@@ -24,183 +26,178 @@ destination = ['Afeganistão',
                'Uruguai',
                'Zimbabue']
 
-origin = ['Brasil',
+origem = ['Brasil',
           'Canadá',
           'França',
           'Japão',
           'Singapura',
           'Zimbabue']
 
-matrix = [
-    [6.69,9.55,0.00,8.28,5.10,5.41,5.73,7.96,7.64,8.92,4.78,5.10,3.82,8.28,8.60,8.92,3.50,4.78,6.69,4.78,4.14,3.18,4.14,6.37,4.46],
-    [8.92,5.41,3.50,0.00,8.60,7.64,4.14,7.96,8.92,9.55,5.73,7.96,5.73,8.60,9.55,4.14,4.14,7.01,7.96,6.69,3.50,7.96,4.14,7.32,7.01],
-    [5.73,6.05,6.69,3.50,0.00,3.50,7.01,8.92,4.14,9.55,8.28,6.05,8.28,8.60,9.24,8.28,3.18,4.78,5.73,8.92,5.41,7.64,6.69,4.14,5.41],
-    [6.05,6.69,3.18,7.01,6.37,9.55,5.73,6.37,0.00,6.05,8.60,7.32,7.96,3.50,6.37,9.24,3.18,3.18,4.14,4.14,6.05,5.10,4.46,9.55,7.32],
-    [5.41,4.46,6.05,9.55,4.78,8.92,5.10,8.60,4.14,8.92,4.14,4.78,4.14,6.37,3.18,3.50,6.05,5.10,5.73,3.50,7.64,0.00,6.69,4.78,4.78],
-    [7.96,3.82,5.41,9.55,6.69,9.24,7.96,6.37,7.96,3.50,8.28,5.73,9.55,5.73,9.24,5.73,6.05,8.60,7.64,3.18,7.64,6.37,7.96,9.55,0.00]
+custos = [
+    [6.69,9.55,0.00,8.28,5.10,5.41,5.73,7.96,7.64,8.92,4.78,5.10,3.82,8.28,8.60,8.92,3.50,4.78,6.69,4.78,4.14,3.18,4.14,6.37,4.46, 999],
+    [8.92,5.41,3.50,0.00,8.60,7.64,4.14,7.96,8.92,9.55,5.73,7.96,5.73,8.60,9.55,4.14,4.14,7.01,7.96,6.69,3.50,7.96,4.14,7.32,7.01, 999],
+    [5.73,6.05,6.69,3.50,0.00,3.50,7.01,8.92,4.14,9.55,8.28,6.05,8.28,8.60,9.24,8.28,3.18,4.78,5.73,8.92,5.41,7.64,6.69,4.14,5.41, 999],
+    [6.05,6.69,3.18,7.01,6.37,9.55,5.73,6.37,0.00,6.05,8.60,7.32,7.96,3.50,6.37,9.24,3.18,3.18,4.14,4.14,6.05,5.10,4.46,9.55,7.32, 999],
+    [5.41,4.46,6.05,9.55,4.78,8.92,5.10,8.60,4.14,8.92,4.14,4.78,4.14,6.37,3.18,3.50,6.05,5.10,5.73,3.50,7.64,0.00,6.69,4.78,4.78, 999],
+    [7.96,3.82,5.41,9.55,6.69,9.24,7.96,6.37,7.96,3.50,8.28,5.73,9.55,5.73,9.24,5.73,6.05,8.60,7.64,3.18,7.64,6.37,7.96,9.55,0.00, 999]
           
     ]
 
 
-availability = [7500, 8100, 4900, 5300, 3900, 3600]
+disponibilidade = [7500, 8100, 4900, 5300, 3900, 3600]
 
-need = [1673, 963, 1444, 1282, 2193, 782, 683, 906, 1195, 962, 1782, 1147,
-        1711, 1441, 1878, 1172, 1254, 548, 643, 1986, 929, 2173, 1907, 1908, 666]
-
-
-result_matrix = []
+necessidade = [1673, 963, 1444, 1282, 2193, 782, 683, 906, 1195, 962, 1782, 1147,
+        1711, 1441, 1878, 1172, 1254, 548, 643, 1986, 929, 2173, 1907, 1908, 666, 72]
 
 
-def reset_result_matrix():
-    column = []
-    for i in range(0, len(matrix)):
-        for j in range(0, len(matrix[0])):
-            column.append(0)
-        result_matrix.append(column.copy())
-        column.clear()
+resultado_custos = []
 
 
-def sum_without_none(iterable):
-    result = 0
-    for number in iterable:
-        if number is not None:
-            result += number
-    return result
+def inicia_resultado_custos():
+    coluna = []
+    for i in range(0, len(custos)):
+        for j in range(0, len(custos[0])):
+            coluna.append(0)
+        resultado_custos.append(coluna.copy())
+        coluna.clear()
 
 
-def insert_artificial_origin():
-    origin.append('dummy')
-    line = []
-    for i in range(0, len(destination)):
-        line.append(0)
-    matrix.append(line)
-    availability.append(sum(need) - sum(availability))
+def soma_sem_nulo(iteravel):
+    resultado = 0
+    for num in iteravel:
+        if num is not None:
+            resultado += num
+    return resultado
 
 
-def insert_artificial_destination():
-    destination.append('dummy')
-    for line in matrix:
-        line.append(999)
-    need.append(sum(availability) - sum(need))
+def calcula_penalidades():
+    penalidade_origem = []
+    penalidade_destino = []
+    coluna = []
+
+    for i, linha in enumerate(custos):
+        penalidade_origem.append(diferenca_menor_custo(
+            iteravel_sem_nulo(linha.copy(), necessidade)))
+
+    for j in range(0, len(custos[0])):
+        for k in range(0, len(custos)):
+            coluna.append(custos[k][j])
+        penalidade_destino.append(diferenca_menor_custo(
+            iteravel_sem_nulo(coluna, disponibilidade)))
+        coluna.clear()
+
+    return [penalidade_origem, penalidade_destino]
 
 
-def calculate_penalties():
-    origin_penalty = []
-    destination_penalty = []
-    column = []
+def diferenca_menor_custo(iteravel):
 
-    for i, line in enumerate(matrix):
-        origin_penalty.append(difference_lower_costs(
-            iterable_without_none(line.copy(), need)))
+    menor = min(iteravel)
+    iteravel.remove(menor)
 
-    for j in range(0, len(matrix[0])):
-        for k in range(0, len(matrix)):
-            column.append(matrix[k][j])
-        destination_penalty.append(difference_lower_costs(
-            iterable_without_none(column, availability)))
-        column.clear()
+    if len(iteravel) == 0:
+        return menor
 
-    return [origin_penalty, destination_penalty]
+    segundo_menor = min(iteravel)
+
+    return abs(segundo_menor - menor)
 
 
-def difference_lower_costs(iterable):
-
-    best = min(iterable)
-    iterable.remove(best)
-
-    if len(iterable) == 0:
-        return best
-
-    alternative = min(iterable)
-
-    return abs(alternative - best)
+def get_coluna(index):
+    coluna = []
+    for j in range(0, len(custos)):
+        coluna.append(custos[j][index])
+    return coluna
 
 
-def get_column(index):
-    column = []
-    for j in range(0, len(matrix)):
-        column.append(matrix[j][index])
-    return column
-
-
-def iterable_without_none(iterable, comparable=None):
-    iterable_remove_none = []
-    for i, x in enumerate(iterable):
-        if comparable is not None:
-            if comparable[i] is not None:
-                iterable_remove_none.append(x)
+def iteravel_sem_nulo(iteravel, comparavel=None):
+    remove_nulo_iteravel = []
+    for i, x in enumerate(iteravel):
+        if comparavel is not None:
+            if comparavel[i] is not None:
+                remove_nulo_iteravel.append(x)
         else:
-            if iterable[i] is not None:
-                iterable_remove_none.append(x)
-    return iterable_remove_none
+            if iteravel[i] is not None:
+                remove_nulo_iteravel.append(x)
+    return remove_nulo_iteravel
 
 
-def find_lower_cell(origin_penalty, destination_penalty):
-    result = []
+def min_positivo(iteravel):
+    for i, num in enumerate(iteravel):
+        if num < 0:
+            iteravel[i] = math.inf
 
-    max_difference_origin = max(origin_penalty)
-    max_difference_destination = max(destination_penalty)
+    try:
+        if min(iteravel) != math.inf:
+            return min(iteravel)
+        else:
+            raise Exception('')
+    except:
+        exit(1)
+        
 
-    if max_difference_origin < max_difference_destination:
-        index_max_difference = destination_penalty.index(
-            max_difference_destination)
-        result.append(index_max_difference)
-        column = get_column(index_max_difference)
-        lower_cost_value = min(iterable_without_none(column, availability))
-        result.append(lower_cost_value)
-        result.append(column.index(lower_cost_value))
+
+def encontra_menor_celula(penalidade_origem, penalidade_destino):
+    resultado = []
+
+    maior_penalidade_origem = max(penalidade_origem)
+    maior_penalidade_destino = max(penalidade_destino)
+
+    if maior_penalidade_origem < maior_penalidade_destino:
+        index_maior_diferenca = penalidade_destino.index(
+            maior_penalidade_destino)
+        resultado.append(index_maior_diferenca)
+        coluna = get_coluna(index_maior_diferenca)
+        menor_valor_custo = min_positivo(iteravel_sem_nulo(coluna, disponibilidade))
+        resultado.append(menor_valor_custo)
+        resultado.append(coluna.index(menor_valor_custo))
     else:
-        index_max_difference = origin_penalty.index(max_difference_origin)
-        result.append(index_max_difference)
-        line = matrix[index_max_difference]
-        lower_cost_value = min(iterable_without_none(line, need))
-        result.append(lower_cost_value)
-        result.append(line.index(lower_cost_value))
-        result.reverse()
+        index_maior_diferenca = penalidade_origem.index(maior_penalidade_origem)
+        resultado.append(index_maior_diferenca)
+        linha = custos[index_maior_diferenca]
+        menor_valor_custo = min_positivo(iteravel_sem_nulo(linha, necessidade))
+        resultado.append(menor_valor_custo)
+        resultado.append(linha.index(menor_valor_custo))
+        resultado.reverse()
 
-    return result
+    return resultado
 
 
-def calculate_result():
+def calcula_resultado():
     z = 0
-    for i in range(0, len(result_matrix)):
-        for j in range(0, len(result_matrix[0])):
-            z += result_matrix[i][j]
+    for i in range(0, len(resultado_custos)):
+        for j in range(0, len(resultado_custos[0])):
+            z += resultado_custos[i][j]
     return z
 
 
 def main():
-    if sum(need) > sum(availability):
-        insert_artificial_origin()
-    elif sum(availability) > sum(need):
-        insert_artificial_destination()
 
-    reset_result_matrix()
+    inicia_resultado_custos()
 
-    while (sum_without_none(availability) + sum_without_none(need)) != 0:
+    while (soma_sem_nulo(disponibilidade) + soma_sem_nulo(necessidade)) != 0:
 
-        origin_penalty, destination_penalty = calculate_penalties()
-        index_column_need, lower_cost_value, index_line_availability = find_lower_cell(
-            origin_penalty, destination_penalty)
+        penalidade_origem, penalidade_destino = calcula_penalidades()
+        index_coluna_necessidade, menor_valor_custo, index_linha_disponibilidade = encontra_menor_celula(
+            penalidade_origem, penalidade_destino)
 
-        value_availability = availability[index_line_availability]
-        value_need = need[index_column_need]
+        valor_disponibilidade = disponibilidade[index_linha_disponibilidade]
+        valor_necessidade = necessidade[index_coluna_necessidade]
 
-        if value_need < value_availability:
-            result_matrix[index_line_availability][index_column_need] = lower_cost_value * value_need
-            for i in range(0, len(matrix)):
-                matrix[i][index_column_need] = 0
-            need[index_column_need] = None
-            availability[index_line_availability] -= value_need
+        if valor_necessidade < valor_disponibilidade:
+            resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * valor_necessidade
+            for i in range(0, len(custos)):
+                custos[i][index_coluna_necessidade] = -1
+            necessidade[index_coluna_necessidade] = None
+            disponibilidade[index_linha_disponibilidade] -= valor_necessidade
         else:
-            result_matrix[index_line_availability][index_column_need] = lower_cost_value * \
-                value_availability
-            for i in range(0, len(matrix[0])):
-                matrix[index_line_availability][i] = 0
-            availability[index_line_availability] = None
-            need[index_column_need] -= value_availability
+            resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * \
+                valor_disponibilidade
+            for i in range(0, len(custos[0])):
+                custos[index_linha_disponibilidade][i] = -1
+            disponibilidade[index_linha_disponibilidade] = None
+            necessidade[index_coluna_necessidade] -= valor_disponibilidade
 
 
 main()
-# print(result_matrix)
-print(calculate_result())
+print(resultado_custos)
+print(calcula_resultado())
