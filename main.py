@@ -24,7 +24,8 @@ destino = ['Afeganistão',
            'Singapura',
            'Tunisia',
            'Uruguai',
-           'Zimbabue']
+           'Zimbabue',
+           'Dummy']
 
 origem = ['Brasil',
           'Canadá',
