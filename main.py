@@ -69,9 +69,9 @@ def inicia_resultado_custos():
         coluna.clear()
 
 
-def soma_sem_nulo(iteravel):
+def soma_sem_nulo(lista):
     resultado = 0
-    for num in iteravel:
+    for num in lista:
         if num is not None:
             resultado += num
     return resultado
@@ -80,33 +80,33 @@ def soma_sem_nulo(iteravel):
 def calcula_penalidades():
     penalidade_origem = []
     penalidade_destino = []
-    coluna = []
+    aux = []
 
     for i, linha in enumerate(custos):
         penalidade_origem.append(diferenca_menor_custo(
-            iteravel_sem_nulo(linha.copy(), necessidade)))
+            lista_sem_nulo(linha, necessidade)))
 
     for j in range(0, len(custos[0])):
         for k in range(0, len(custos)):
-            coluna.append(custos[k][j])
+            aux.append(custos[k][j])
         penalidade_destino.append(diferenca_menor_custo(
-            iteravel_sem_nulo(coluna, disponibilidade)))
-        coluna.clear()
+            lista_sem_nulo(aux, disponibilidade)))
+        aux.clear()
 
     return [penalidade_origem, penalidade_destino]
 
 
-def diferenca_menor_custo(iteravel):
+def diferenca_menor_custo(lista):
 
-    menor = min(iteravel)
-    iteravel.remove(menor)
+    menor = min(lista)
+    lista.remove(menor)
 
-    if len(iteravel) == 0:
+    if len(lista) == 0:
         return menor
 
-    segundo_menor = min(iteravel)
+    segundo_menor = min(lista)
 
-    return abs(segundo_menor - menor)
+    return segundo_menor - menor
 
 
 def get_coluna(index):
@@ -116,26 +116,26 @@ def get_coluna(index):
     return coluna
 
 
-def iteravel_sem_nulo(iteravel, comparavel=None):
-    remove_nulo_iteravel = []
-    for i, x in enumerate(iteravel):
-        if comparavel is not None:
-            if comparavel[i] is not None:
-                remove_nulo_iteravel.append(x)
+def lista_sem_nulo(lista, lista_comparacao=None):
+    remove_nulo_lista = []
+    for i, x in enumerate(lista):
+        if lista_comparacao is not None:
+            if lista_comparacao[i] is not None:
+                remove_nulo_lista.append(x)
         else:
-            if iteravel[i] is not None:
-                remove_nulo_iteravel.append(x)
-    return remove_nulo_iteravel
+            if lista[i] is not None:
+                remove_nulo_lista.append(x)
+    return remove_nulo_lista
 
 
-def min_positivo(iteravel):
-    for i, num in enumerate(iteravel):
+def min_positivo(lista):
+    for i, num in enumerate(lista):
         if num <= 0:
-            iteravel[i] = math.inf
+            lista[i] = math.inf
 
     try:
-        if min(iteravel) != math.inf:
-            return min(iteravel)
+        if min(lista) != math.inf:
+            return min(lista)
         else:
             raise Exception('')
     except:
@@ -148,13 +148,13 @@ def encontra_menor_celula(penalidade_origem, penalidade_destino):
     maior_penalidade_origem = max(penalidade_origem)
     maior_penalidade_destino = max(penalidade_destino)
 
-    if maior_penalidade_origem < maior_penalidade_destino:
+    if  maior_penalidade_destino > maior_penalidade_origem:
         index_maior_diferenca = penalidade_destino.index(
             maior_penalidade_destino)
         resultado.append(index_maior_diferenca)
         coluna = get_coluna(index_maior_diferenca)
         menor_valor_custo = min_positivo(
-            iteravel_sem_nulo(coluna, disponibilidade))
+            lista_sem_nulo(coluna, disponibilidade))
         resultado.append(menor_valor_custo)
         resultado.append(coluna.index(menor_valor_custo))
     else:
@@ -162,7 +162,7 @@ def encontra_menor_celula(penalidade_origem, penalidade_destino):
             maior_penalidade_origem)
         resultado.append(index_maior_diferenca)
         linha = custos[index_maior_diferenca]
-        menor_valor_custo = min_positivo(iteravel_sem_nulo(linha, necessidade))
+        menor_valor_custo = min_positivo(lista_sem_nulo(linha, necessidade))
         resultado.append(menor_valor_custo)
         resultado.append(linha.index(menor_valor_custo))
         resultado.reverse()
@@ -184,7 +184,7 @@ def valor_transporte_individual():
         for j, num in enumerate(resultado_custos[aux]):
             if num != 0:
                 a = origem[i]
-                b = destino[j-1]
+                b = destino[j]
                 print(str(a)+" --> "+str(b)+" = " + str(num))
         aux = aux+1
 
@@ -202,15 +202,14 @@ def main():
         valor_disponibilidade = disponibilidade[index_linha_disponibilidade]
         valor_necessidade = necessidade[index_coluna_necessidade]
 
-        if valor_necessidade < valor_disponibilidade:
+        if  valor_disponibilidade > valor_necessidade:
             resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * valor_necessidade
             for i in range(0, len(custos)):
                 custos[i][index_coluna_necessidade] = 0
             necessidade[index_coluna_necessidade] = None
             disponibilidade[index_linha_disponibilidade] -= valor_necessidade
         else:
-            resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * \
-                valor_disponibilidade
+            resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * valor_disponibilidade
             for i in range(0, len(custos[0])):
                 custos[index_linha_disponibilidade][i] = 0
             disponibilidade[index_linha_disponibilidade] = None
@@ -218,7 +217,7 @@ def main():
 
 
 main()
-# print(resultado_custos)
+print(resultado_custos)
 print('===================================')
 print('Transportes:')
 valor_transporte_individual()
