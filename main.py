@@ -130,7 +130,7 @@ def lista_sem_nulo(lista, lista_comparacao=None):
 
 def min_positivo(lista):
     for i, num in enumerate(lista):
-        if num <= 0:
+        if num < 0:
             lista[i] = math.inf
 
     try:
@@ -174,19 +174,28 @@ def calcula_resultado():
     z = 0
     for i in range(0, len(resultado_custos)):
         for j in range(0, len(resultado_custos[0])):
+            if destino[j] == 'Dummy':
+                    break
             z += resultado_custos[i][j]
     return z
 
 
 def valor_transporte_individual():
     aux = 0
+    dummy = 0
+    resto = ''
     for i in range(0, len(resultado_custos)):
         for j, num in enumerate(resultado_custos[aux]):
             if num != 0:
+                if destino[j] == 'Dummy':
+                    resto = origem[i]
+                    dummy = num 
+                    break
                 a = origem[i]
                 b = destino[j]
                 print(str(a)+" --> "+str(b)+" = " + str(num))
         aux = aux+1
+    print("Dummy("+resto+"): "+str(dummy))
 
 
 def main():
@@ -205,13 +214,13 @@ def main():
         if  valor_disponibilidade > valor_necessidade:
             resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * valor_necessidade
             for i in range(0, len(custos)):
-                custos[i][index_coluna_necessidade] = 0
+                custos[i][index_coluna_necessidade] = -1
             necessidade[index_coluna_necessidade] = None
             disponibilidade[index_linha_disponibilidade] -= valor_necessidade
         else:
             resultado_custos[index_linha_disponibilidade][index_coluna_necessidade] = menor_valor_custo * valor_disponibilidade
             for i in range(0, len(custos[0])):
-                custos[index_linha_disponibilidade][i] = 0
+                custos[index_linha_disponibilidade][i] = -1
             disponibilidade[index_linha_disponibilidade] = None
             necessidade[index_coluna_necessidade] -= valor_disponibilidade
 
